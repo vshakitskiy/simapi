@@ -80,3 +80,7 @@
       @apply bg-gradient-to-tr dark:from-pink-50 dark:via-fuchsia-300 dark:to-violet-500 text-transparent bg-clip-text from-gray-900 to-pink-900 via-pink-950
     }
   }
+
+.dark .simplebar-scrollbar::before {
+  background-color: white;
+}

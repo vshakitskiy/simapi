@@ -25,7 +25,6 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
           {children}
           <Toaster />
         </Providers>
-        <div className="h-40 md:hidden" />
       </body>
     </html>
   )
