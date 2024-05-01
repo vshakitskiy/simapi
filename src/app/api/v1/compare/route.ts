@@ -1,18 +1,19 @@
-import { NextApiHandler } from "next"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import db from "@/lib/db"
-import { openai } from "@/lib/openai"
 import { cosineSimilarity } from "@/lib/compare"
 import { headers } from "next/headers"
+import axios from "axios"
 
 const reqSchema = z.object({
   text1: z.string().max(1000),
   text2: z.string().max(1000)
 })
 
+const url = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
+
 export const POST = async (req: Request, _res: Response) => {
-  try {1
+  try {
     const apiKey = headers().get("authorization")
     if (!apiKey)
       return NextResponse.json({
@@ -35,17 +36,22 @@ export const POST = async (req: Request, _res: Response) => {
       }, { status: 401 })
 
     const start = new Date()
+  
     const embeddings = await Promise.all(
       [text1, text2].map(async text => {
-        const res = await openai.embeddings.create({
-          model: "text-embedding-ada-002",
-          input: text
+        const { data } = await axios.post<number[]>(url, {
+          inputs: text
+        }, {
+          headers: {
+            Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`
+          }
         })
-
-        return res.data[0].embedding
+        return data
       })
     )
+  
     const similarity = cosineSimilarity(embeddings[0], embeddings[1])
+    console.log(similarity)
     const duration = new Date().getTime() - start.getTime()
 
     await db.apiRequest.create({
@@ -76,8 +82,7 @@ export const POST = async (req: Request, _res: Response) => {
     console.log(error)
 
     return NextResponse.json({
-      error: "Internal server error. Something went wrong while comparing text.",
-      message: error
+      error: "Internal server error. Something went wrong while comparing text."
     }, { status: 500 })
   }
 }
