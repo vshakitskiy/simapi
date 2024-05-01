@@ -8,40 +8,40 @@ import { z } from "zod"
 export const POST = async (_req: Request, _res: Response) => {
   try {
     const user = await getServerSession(authOptions)
-    .then(res => res?.user)
+      .then(res => res?.user)
 
-  if (!user)
-    return NextResponse.json({
-      error: "Unauthorized.",
-      sucess: false
-    }, { status: 401 })
+    if (!user)
+      return NextResponse.json({
+        error: "Unauthorized.",
+        sucess: false
+      }, { status: 401 })
   
-  const validApiKey = await db.apiKey.findFirst({
-    where: {
-      userId: user.id,
-      enabled: true
-    }
-  })
+    const validApiKey = await db.apiKey.findFirst({
+      where: {
+        userId: user.id,
+        enabled: true
+      }
+    })
 
-  if (!validApiKey)
+    if (!validApiKey)
+      return NextResponse.json({
+        error: "You don't have an active API key.",
+        sucess: false
+      }, { status: 500 })
+
+    await db.apiKey.update({
+      where: {
+        id: validApiKey.id
+      },
+      data: {
+        enabled: false
+      }
+    })
+
     return NextResponse.json({
-      error: "You don't have an active API key.",
-      sucess: false
-    }, { status: 500 })
-
-  await db.apiKey.update({
-    where: {
-      id: validApiKey.id
-    },
-    data: {
-      enabled: false
-    }
-  })
-
-  return NextResponse.json({
-    error: null,
-    success: true
-  }, { status: 200 })
+      error: null,
+      success: true
+    }, { status: 200 })
   } catch (error) {
     if (error instanceof z.ZodError)
       return NextResponse.json({
