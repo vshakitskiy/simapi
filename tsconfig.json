@@ -31,6 +31,9 @@
       ],
       "@/auth/*": [
         "components/auth/*"
+      ],
+      "@/dashboard/*": [
+        "components/dashboard/*"
       ]
     }
   },
