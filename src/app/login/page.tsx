@@ -2,17 +2,10 @@ import GoogleSignIn from "@/components/GoogleSignIn"
 import { Button } from "@/components/ui/Button"
 import Heading from "@/components/ui/Heading"
 import Paragraph from "@/components/ui/Paragraph"
-import { getSession } from "@/lib/auth"
 import { ChevronLeft } from "lucide-react"
-import { redirect } from "next/navigation"
 import Link from "next/link"
 
-const LoginPage = async () => {
-  const session = await getSession()
-
-  if (session)
-    redirect("/dashboard")
-
+const LoginPage = () => {
   return (
     <div className="absolute inset-0 mx-auto container flex h-screen flex-col items-center justify-center">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 max-w-lg">
