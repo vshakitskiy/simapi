@@ -14,6 +14,10 @@ const ratelimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(1, "1 s")
 })
 
+export const config = {
+  matcher: ["/", "/login", "/dashboard/:path*", "/api/:path*"]
+}
+
 export default withAuth(
   async function middleware(req) {
     const pathname = req.nextUrl.pathname
@@ -42,30 +46,19 @@ export default withAuth(
     const isAuthPage = pathname.startsWith("/login")
     const sensitiveRoutes = ["/dashboard"]
 
-    if (isAuthPage) {
-      if (isAuth)
-        return NextResponse.redirect(new URL("/dashboard", req.url), {
-          status: 303
-        })
-      return null
-    }
-    if (
-      !isAuth 
-            && sensitiveRoutes.some(route => pathname.startsWith(route))
-    ) {
-      return NextResponse.redirect(new URL("/login", req.url), {
+    if (isAuthPage && isAuth)
+      return NextResponse.redirect(new URL("/dashboard", req.url), {
         status: 303
       })
-    }
   }, {
     callbacks: {
-      async authorized() {
-        return true
-      }
+      async authorized({ token, req }) {
+        const isDashboardPage = req.nextUrl.pathname.startsWith("/dashboard")
+        return !(!token && isDashboardPage)
+      },
+    },
+    pages: {
+      signIn: "/login"
     }
   }
 )
-
-export const config = {
-  matcher: ["/", "/login", "/dashboard/:path*", "/api/:path*"]
-}
