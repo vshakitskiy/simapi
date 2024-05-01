@@ -44,14 +44,18 @@ export default withAuth(
 
     if (isAuthPage) {
       if (isAuth)
-        return NextResponse.redirect(new URL("/dashboard", req.url))
+        return NextResponse.redirect(new URL("/dashboard", req.url), {
+          status: 303
+        })
       return null
     }
     if (
       !isAuth 
             && sensitiveRoutes.some(route => pathname.startsWith(route))
     ) {
-      return NextResponse.redirect(new URL("/login", req.url))
+      return NextResponse.redirect(new URL("/login", req.url), {
+        status: 303
+      })
     }
   }, {
     callbacks: {
