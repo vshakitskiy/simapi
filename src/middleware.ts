@@ -1,7 +1,6 @@
 import { Redis } from "@upstash/redis"
 import { Ratelimit } from "@upstash/ratelimit"
 import { NextMiddleware, NextResponse } from "next/server"
-import { getToken } from "next-auth/jwt"
 
 const redis = new Redis({
   url: process.env.REDIS_URL as string,
@@ -14,7 +13,7 @@ const ratelimit = new Ratelimit({
 })
 
 export const config = {
-  matcher: ["/", "/login", "/dashboard/:path*", "/api/:path*"]
+  matcher: ["/api/:path*"]
 }
 
 const middleware: NextMiddleware = async (req) => {
@@ -37,22 +36,6 @@ const middleware: NextMiddleware = async (req) => {
       }, { status: 500 })
     }
   }
-
-  const token = await getToken({ req })
-  const isAuth = !!token
-
-  const isAuthPage = pathname.startsWith("/login")
-  const sensitiveRoutes = ["/dashboard"]
-
-  if (isAuthPage && isAuth)
-    return NextResponse.redirect(new URL("/dashboard", req.url), {
-      status: 303
-    })
-
-  if (!isAuth && sensitiveRoutes.some((route) => pathname.startsWith(route)))
-    return NextResponse.redirect(new URL("/login", req.url), {
-      status: 303
-    })
 }
 
 export default middleware
