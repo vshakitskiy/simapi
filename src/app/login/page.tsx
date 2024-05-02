@@ -10,16 +10,17 @@ const LoginPage = () => {
     <div className="absolute inset-0 mx-auto container flex h-screen flex-col items-center justify-center">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 max-w-lg">
         <div className="flex flex-col items-center gap-6 text-center">
+        <div className="blur-3xl absolute gradient-landing w-3/4 h-[280px] -z-10" />
           <Link href="/">
             <Button
               variant="ghost"
-              className="w-fit"
+              className="w-fit hover:bg-secondary/30"
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Back to Home
             </Button>
           </Link>
-          <Heading>
+          <Heading className="text-landing">
             Welcome back!
           </Heading>
           <Paragraph>

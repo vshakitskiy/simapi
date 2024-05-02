@@ -40,10 +40,6 @@ const ApiDashboard = async () => {
           apiKey={activeKey.key}
         />
       </div>
-      <Paragraph className="text-center md:text-left mt-4 -mb-4">
-        Your API history
-      </Paragraph>
-      {/* TODO: normal data table features */}
       <DataTable 
         columns={columns}
         data={requests}

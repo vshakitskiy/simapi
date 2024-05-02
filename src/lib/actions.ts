@@ -53,7 +53,8 @@ export const getRequests = async (apiKeys: ApiKey[]) => {
 
   const serializedRequests = requests.map(req => ({
     ...req,
-    timestamp: formatDistance(new Date(req.timestamp), new Date())
+    timestamp: formatDistance(new Date(req.timestamp), new Date()),
+    ms: req.timestamp.getTime()
   }))
 
   return serializedRequests

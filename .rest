@@ -1,6 +1,6 @@
 POST http://localhost:3000/api/v1/compare HTTP/1.1
 Content-Type: application/json
-Authorization: O3lcvM2XQ4Ir0lQqDzh6S
+Authorization: 4VH0Bc_Gqup_fvr8bDFnO
 
 {
   "text1": "test1",
@@ -11,9 +11,9 @@ Authorization: O3lcvM2XQ4Ir0lQqDzh6S
 
 POST https://simapi.vercel.app/api/v1/compare HTTP/1.1
 Content-Type: application/json
-Authorization: O3lcvM2XQ4Ir0lQqDzh6S
+Authorization: uhs8WlJpmQWhNQgkTxIbZ
 
 {
   "text1": "test1",
-  "text2": "123test"
+  "text2": "test"
 }
